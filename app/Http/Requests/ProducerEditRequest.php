@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class NoteCreateRequest extends FormRequest
+class ProducerEditRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -16,12 +16,14 @@ class NoteCreateRequest extends FormRequest
 
     /**
      * Get the validation rules that apply to the request.
+     *
      */
     public function rules(): array
     {
         return [
-            'name' => 'required',
-            'detail' => 'required'
+            'name' => 'required|string|max:255',
+            'address' => 'nullable|string',
+            'contact' => 'required|string',
         ];
     }
 }

@@ -11,11 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('notes', function (Blueprint $table) {
+        Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->text('detail');
+            $table->text('detail')->nullable();
+            $table->unsignedBigInteger('producer_id');
+            $table->decimal('price', 65, 2);
+            $table->integer('amount');
             $table->timestamps();
+
+            // Foreign key constraint
+            $table->foreign('producer_id')->references('id')->on('producers')->onDelete('cascade');
         });
     }
 

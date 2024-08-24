@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class NoteEditRequest extends FormRequest
+class ProductEditRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -16,12 +16,16 @@ class NoteEditRequest extends FormRequest
 
     /**
      * Get the validation rules that apply to the request.
+     *
      */
     public function rules(): array
     {
         return [
-            'name' => 'required',
-            'detail' => 'required'
+            'name' => 'required|string|max:255',
+            'detail' => 'nullable|string',
+            'producer_id' => 'required|exists:producers,id',
+            'price' => 'required|numeric|min:0',
+            'amount' => 'required|integer|min:0',
         ];
     }
 }
