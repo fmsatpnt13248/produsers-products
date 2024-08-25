@@ -1,11 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\old;
 
-namespace App\Http\Controllers;
-
+use App\Http\Controllers\Controller;
 use App\Models\Producer;
-use Illuminate\Http\Request;
 
 class ProducerSearchController extends Controller
 {

@@ -14,13 +14,27 @@ use Illuminate\View\View;
 class ProducerController extends Controller
 {
     /**
+     *
+     */
+    public function search(Request $request)
+    {
+        $query = Producer::query();
+
+        if ($request->filled('column') && $request->filled('search')) {
+            $query->where($request->column, 'LIKE', '%' . $request->search . '%');
+        }
+
+        $results = $query->paginate(15);
+
+        return response()->json($results);
+    }
+
+    /**
      * Display a listing of the resource.
      */
     public function index(): View
     {
-        $producers = Producer::orderBy('id', 'asc')->get();
-
-        return view('producers.index', compact('producers'));
+        return view('producers.index');
     }
 
     /**
