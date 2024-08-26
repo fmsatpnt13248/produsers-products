@@ -35,11 +35,7 @@
                                 <div style="display: flex">
                                     <a class="btn btn-primary" :href="editRoute(producer.id)">Edit</a>
 
-                                    <form :action="deleteRoute(producer.id)" method="POST">
-                                        <input type="hidden" name="_token" :value="csrfToken">
-                                        <input type="hidden" name="_method" value="DELETE">
-                                        <button type="submit" class="btn btn-danger">Delete</button>
-                                    </form>
+                                    <button @click="deleteItem(producer.id)" class="btn btn-danger">Delete</button>
                                 </div>
                             </td>
                         </tr>
@@ -64,7 +60,7 @@ export default {
             searchQuery: '',
             selectedColumn: 'name',
             producers: {},
-            page: 1,
+            page: 1
         };
     },
     computed: {
@@ -96,9 +92,19 @@ export default {
                 this.fetchProducers(this.page);
             }
         },
-        deleteRoute(id) {
-            return `/producers/${id}`;
+        deleteItem(id) {
+            axios.delete(`producers/${id}`)
+                .then(response => {
+                    console.log(`Deleted post with ID ${id}`);
+                    this.fetchProducers();
+                })
+                .catch(error => {
+                    console.error(error);
+                });
         },
+        // deleteRoute(id) {
+        //     return `/producers/${id}`;
+        // },
         editRoute(id) {
             return `/producers/${id}/edit`;
         },

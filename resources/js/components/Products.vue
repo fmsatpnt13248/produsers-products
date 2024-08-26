@@ -40,11 +40,7 @@
                             <div style="display: flex">
                                 <a class="btn btn-primary" :href="editRoute(product.id)">Edit</a>
 
-                                <form :action="deleteRoute(product.id)" method="POST">
-                                    <input type="hidden" name="_token" :value="csrfToken">
-                                    <input type="hidden" name="_method" value="DELETE">
-                                    <button type="submit" class="btn btn-danger">Delete</button>
-                                </form>
+                                <button @click="deleteItem(product.id)" class="btn btn-danger">Delete</button>
                             </div>
                         </td>
                     </tr>
@@ -101,9 +97,19 @@ export default {
                 this.fetchProducts(this.page);
             }
         },
-        deleteRoute(id) {
-            return `/products/${id}`;
+        deleteItem(id) {
+            axios.delete(`products/${id}`)
+                .then(response => {
+                    console.log(`Deleted post with ID ${id}`);
+                    this.fetchProducts();
+                })
+                .catch(error => {
+                    console.error(error);
+                });
         },
+        // deleteRoute(id) {
+        //     return `/products/${id}`;
+        // },
         editRoute(id) {
             return `/products/${id}/edit`;
         },

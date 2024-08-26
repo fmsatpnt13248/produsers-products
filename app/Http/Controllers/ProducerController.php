@@ -84,10 +84,10 @@ class ProducerController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Producer $producer): RedirectResponse
+    public function destroy(Producer $producer): View
     {
         $producer->delete();
 
-        return redirect()->route('producers.index')->with('success','Producer deleted successfully');
+        return view('producers.index')->with('success','Producer deleted successfully');
     }
 }
