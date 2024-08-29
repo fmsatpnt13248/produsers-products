@@ -7,6 +7,12 @@
             <li class="nav-item">
                 <a class="nav-link" aria-current="page" href="{{ route('products.index') }}">Products</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="{{ route('orders.index') }}">Orders</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="{{ route('order_items.index') }}">Order Items</a>
+            </li>
         </ul>
     </div>
     <div id="app">
