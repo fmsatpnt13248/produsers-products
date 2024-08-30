@@ -12,6 +12,8 @@
             <option value="name">Name</option>
         </select>
 
+        <div v-if="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
         <div class="card mt-5">
             <div class="card-body">
                 <table class="table table-bordered table-striped mt-4">
