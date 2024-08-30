@@ -43,8 +43,8 @@
 
         <nav aria-label="Page navigation example">
             <ul class="pagination">
-                <li class="page-item"><button @click="prevPage" :disabled="!orders.prev_page_url">Previous</button></li>
-                <li class="page-item"><button @click="nextPage" :disabled="!orders.next_page_url">Next</button></li>
+                <li :class="navClassLeft"><button class="page-link" @click="prevPage" :disabled="!orders.prev_page_url">Previous</button></li>
+                <li :class="navClassRight"><button class="page-link" @click="nextPage" :disabled="!orders.next_page_url">Next</button></li>
             </ul>
         </nav>
     </div>
@@ -59,6 +59,24 @@ export default {
             orders: {},
             page: 1
         };
+    },
+    computed: {
+        navClassLeft() {
+            if (!this.orders.prev_page_url) {
+                return "page-item disabled";
+            }
+            else {
+                return "page-item";
+            }
+        },
+        navClassRight() {
+            if (!this.orders.next_page_url) {
+                return "page-item disabled";
+            }
+            else {
+                return "page-item";
+            }
+        },
     },
     methods: {
         fetchOrders(page = 1) {
