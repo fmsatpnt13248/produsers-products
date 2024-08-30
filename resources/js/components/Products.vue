@@ -40,7 +40,7 @@
                             <div style="display: flex">
                                 <a class="btn btn-primary" :href="editRoute(product.id)">Edit</a>
 
-                                <button @click="deleteItem(product.id)" class="btn btn-danger">Delete</button>
+                                <button style="margin-left: 10px"  @click="deleteItem(product.id)" class="btn btn-danger">Delete</button>
                             </div>
                         </td>
                     </tr>
@@ -67,11 +67,6 @@ export default {
             products: {},
             page: 1,
         };
-    },
-    computed: {
-        csrfToken() {
-            return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        },
     },
     methods: {
         fetchProducts(page = 1) {
@@ -107,9 +102,6 @@ export default {
                     console.error(error);
                 });
         },
-        // deleteRoute(id) {
-        //     return `/products/${id}`;
-        // },
         editRoute(id) {
             return `/products/${id}/edit`;
         },

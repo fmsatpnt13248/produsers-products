@@ -36,9 +36,8 @@
                             <td>{{ item.amount }}</td>
                             <td>
                                 <div style="display: flex">
-                                    <a class="btn btn-primary" :href="editRoute(item.id)">Edit</a>
 
-                                    <button @click="deleteItem(item.id)" class="btn btn-danger">Delete</button>
+                                    <button style="margin-left: 10px" @click="deleteItem(item.id)" class="btn btn-danger">Delete</button>
                                 </div>
                             </td>
                         </tr>
@@ -100,9 +99,9 @@ export default {
                     console.error(error);
                 });
         },
-        editRoute(id) {
-            return `/order_items/${id}/edit`;
-        },
+        // editRoute(id) {
+        //     return `/order_items/${id}/edit`;
+        // },
     },
     mounted() {
         this.fetchOrderItems();

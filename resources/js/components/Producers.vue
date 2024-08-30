@@ -35,7 +35,7 @@
                                 <div style="display: flex">
                                     <a class="btn btn-primary" :href="editRoute(producer.id)">Edit</a>
 
-                                    <button @click="deleteItem(producer.id)" class="btn btn-danger">Delete</button>
+                                    <button style="margin-left: 10px"  @click="deleteItem(producer.id)" class="btn btn-danger">Delete</button>
                                 </div>
                             </td>
                         </tr>
@@ -62,11 +62,6 @@ export default {
             producers: {},
             page: 1
         };
-    },
-    computed: {
-        csrfToken() {
-            return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        },
     },
     methods: {
         fetchProducers(page = 1) {
@@ -102,9 +97,6 @@ export default {
                     console.error(error);
                 });
         },
-        // deleteRoute(id) {
-        //     return `/producers/${id}`;
-        // },
         editRoute(id) {
             return `/producers/${id}/edit`;
         },

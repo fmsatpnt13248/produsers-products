@@ -32,7 +32,7 @@
                                 <div style="display: flex">
                                     <a class="btn btn-primary" :href="editRoute(order.id)">Edit</a>
 
-                                    <button @click="deleteItem(order.id)" class="btn btn-danger">Delete</button>
+                                    <button style="margin-left: 10px"  @click="deleteItem(order.id)" class="btn btn-danger">Delete</button>
                                 </div>
                             </td>
                         </tr>

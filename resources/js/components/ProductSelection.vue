@@ -1,5 +1,6 @@
 <template>
-    <div>
+    <div v-if="isProductSelection">
+        <h2 class="card-header">Add products to order</h2>
         <div class="input-group">
             <div class="form-outline" style="display: flex" data-mdb-input-init>
                 <input class="form-control" v-model="searchQuery" @keyup.enter="fetchProducts" placeholder="Search..." />
@@ -26,7 +27,7 @@
                         <td>{{ product.id }}</td>
                         <td>{{ product.name }}</td>
                         <td>
-                            <a class="btn btn-primary" :href="nextRoute(product.id)">Select</a>
+                            <button class="btn btn-primary" @click="nextRoute(product.id)">Select</button>
                         </td>
                     </tr>
                     </tbody>
@@ -41,6 +42,30 @@
             </ul>
         </nav>
     </div>
+
+    <div v-if="!isProductSelection">
+        <div class="card mt-5">
+            <h2 class="card-header">Select an order and amount</h2>
+            <div class="card-body">
+                <form action="/order_items" method="post">
+                    <input type="hidden" name="_token" :value="csrfToken">
+                    <input type="hidden" name="product_id" :value="productID">
+
+                    <div class="mb-3">
+                        <label for="order_id" class="form-label">Order ID:</label>
+                        <input type="text" name="order_id" class="form-control" id="order_id" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="amount" class="form-label">Amount:</label>
+                        <input type="number" name="amount" class="form-control" id="amount" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-success">Add to Order</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -50,12 +75,19 @@ export default {
             searchQuery: '',
             selectedColumn: 'name',
             products: {},
+            productID: 0,
             page: 1,
+            isProductSelection: true,
         };
+    },
+    computed: {
+        csrfToken() {
+            return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        },
     },
     methods: {
         fetchProducts(page = 1) {
-            axios.get("create/products_api", {
+            axios.get("http://localhost/products_api", {
                 params: {
                     search: this.searchQuery,
                     column: this.selectedColumn,
@@ -64,6 +96,11 @@ export default {
             }).then(response => {
                 this.products = response.data;
             });
+        },
+        computed: {
+            csrfToken() {
+                return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            },
         },
         nextPage() {
             if (this.products.next_page_url) {
@@ -78,8 +115,18 @@ export default {
             }
         },
         nextRoute(id) {
-            return `/order_items/orderSelection/${id}`;
+            this.productID = id;
+            this.isProductSelection = false;
         },
+        // proceed() {
+        //     fetch('/order_items', {
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //             'X-CSRF-TOKEN': this.csrfToken
+        //         },
+        //     });
+        // },
     },
     mounted() {
         this.fetchProducts();
