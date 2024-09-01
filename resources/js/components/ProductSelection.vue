@@ -1,4 +1,5 @@
 <template>
+    <label v-if="errorMessage !== null" class="alert alert-danger">{{ errorMessage }}</label>
     <div v-if="isProductSelection">
         <h2 class="card-header">Add products to order</h2>
         <div class="input-group">
@@ -11,8 +12,6 @@
             <option value="id">ID</option>
             <option value="name">Name</option>
         </select>
-
-        <div v-if="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
 
         <div class="card mt-5">
             <div class="card-body">
@@ -49,18 +48,17 @@
         <div class="card mt-5">
             <h2 class="card-header">Select an order and amount</h2>
             <div class="card-body">
-                <form action="/order_items" method="post">
-                    <input type="hidden" name="_token" :value="csrfToken">
-                    <input type="hidden" name="product_id" :value="productID">
+                <form @submit.prevent="createOrderItem">
+                    <input type="hidden" v-model="product_id">
 
                     <div class="mb-3">
                         <label for="order_id" class="form-label">Order ID:</label>
-                        <input type="text" name="order_id" class="form-control" id="order_id" required>
+                        <input type="text" v-model="order_id" class="form-control" id="order_id" required>
                     </div>
 
                     <div class="mb-3">
                         <label for="amount" class="form-label">Amount:</label>
-                        <input type="number" name="amount" class="form-control" id="amount" required>
+                        <input type="number" v-model="amount" class="form-control" id="amount" required>
                     </div>
 
                     <button type="submit" class="btn btn-success">Add to Order</button>
@@ -77,8 +75,11 @@ export default {
             searchQuery: '',
             selectedColumn: 'name',
             products: {},
-            productID: 0,
+            product_id: 0,
+            order_id: null,
+            amount: null,
             page: 1,
+            errorMessage: null,
             isProductSelection: true,
         };
     },
@@ -115,11 +116,6 @@ export default {
                 this.products = response.data;
             });
         },
-        computed: {
-            csrfToken() {
-                return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-            },
-        },
         nextPage() {
             if (this.products.next_page_url) {
                 this.page++;
@@ -133,18 +129,28 @@ export default {
             }
         },
         nextRoute(id) {
-            this.productID = id;
+            this.product_id = id;
             this.isProductSelection = false;
         },
-        // proceed() {
-        //     fetch('/order_items', {
-        //         method: 'POST',
-        //         headers: {
-        //             'Content-Type': 'application/json',
-        //             'X-CSRF-TOKEN': this.csrfToken
-        //         },
-        //     });
-        // },
+        async createOrderItem() {
+            try {
+                const response = await axios.post('/order_items', {
+                    order_id: this.order_id,
+                    product_id: this.product_id,
+                    amount: this.amount
+                });
+
+                if (response.data === 'StockError') {
+                    this.errorMessage = "Not enough products in stock";
+                }
+                if (response.data === 'Success') {
+                    window.location.href = 'http://localhost/order_items';
+                }
+            } catch (error) {
+                console.log(error);
+                this.errorMessage = error.response.data.errors;
+            }
+        },
     },
     mounted() {
         this.fetchProducts();

@@ -47,7 +47,7 @@ class OrderItemController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request)
     {
         $request->validate([
             'order_id' => 'required|exists:orders,id',
@@ -55,11 +55,12 @@ class OrderItemController extends Controller
             'amount' => 'required|integer|min:1',
         ]);
 
-        $product = Product::findOrFail($request->product_id);
+
+        $product = Product::find($request->product_id);
         $order = Order::findOrFail($request->order_id);
 
         if ($product->amount < $request->amount) {
-            return back()->withErrors('Not enough product in stock.');
+            return response('StockError');
         }
 
         $price = $product->price;
@@ -78,7 +79,7 @@ class OrderItemController extends Controller
         $order->price_total += $price * $amount;
         $order->save();
 
-        return redirect()->route('order_items.index')->with('success', 'Order item added successfully.');
+        return response('Success');
     }
 
     /**
