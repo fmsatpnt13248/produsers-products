@@ -48,21 +48,19 @@
         <div class="card mt-5">
             <h2 class="card-header">Select an order and amount</h2>
             <div class="card-body">
-                <form @submit.prevent="createOrderItem">
-                    <input type="hidden" v-model="product_id">
+                <input type="hidden" v-model="product_id">
 
-                    <div class="mb-3">
-                        <label for="order_id" class="form-label">Order ID:</label>
-                        <input type="text" v-model="order_id" class="form-control" id="order_id" required>
-                    </div>
+                <div class="mb-3">
+                    <label for="order_id" class="form-label">Order ID:</label>
+                    <input type="text" v-model="order_id" class="form-control" id="order_id" required>
+                </div>
 
-                    <div class="mb-3">
-                        <label for="amount" class="form-label">Amount:</label>
-                        <input type="number" v-model="amount" class="form-control" id="amount" required>
-                    </div>
+                <div class="mb-3">
+                    <label for="amount" class="form-label">Amount:</label>
+                    <input type="number" v-model="amount" class="form-control" id="amount" required>
+                </div>
 
-                    <button type="submit" class="btn btn-success">Add to Order</button>
-                </form>
+                <button type="submit" @click.prevent="selectOrder" class="btn btn-success">Add to Order</button>
             </div>
         </div>
     </div>
@@ -74,19 +72,21 @@ export default {
         return {
             searchQuery: '',
             selectedColumn: 'name',
+
+            orders: {},
+            selectedOrders: [],
+            order_id: null,
+
             products: {},
             product_id: 0,
-            order_id: null,
             amount: null,
+
             page: 1,
             errorMessage: null,
             isProductSelection: true,
         };
     },
     computed: {
-        csrfToken() {
-            return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        },
         navClassLeft() {
             if (!this.products.prev_page_url) {
                 return "page-item disabled";
@@ -105,7 +105,7 @@ export default {
         },
     },
     methods: {
-        fetchProducts(page = 1) {
+        fetchProducts() {
             axios.get("http://localhost/products_api", {
                 params: {
                     search: this.searchQuery,
@@ -131,6 +131,31 @@ export default {
         nextRoute(id) {
             this.product_id = id;
             this.isProductSelection = false;
+        },
+        selectOrder() {
+            try {
+                axios.get("orders_api", {
+                    params: {
+                        search: 'pending',
+                        column: 'status',
+                        page: this.page,
+                    },
+                }).then(response => {
+                    if (response.data.length !== 0) {
+                        this.orders = response.data;
+                    } else {
+                        this.errorMessage = 'No open orders found. Create an order with "pending" status first';
+                        console.error(this.errorMessage);
+                    }
+                });
+                this.selectedOrders = Object.keys(this.orders);
+                this.order_id = this.selectedOrders[this.selectedOrders.length - 1];
+            } catch (error) {
+                console.log(error);
+                this.errorMessage = error.response.data.errors;
+                return;
+            }
+            this.createOrderItem()
         },
         async createOrderItem() {
             try {
