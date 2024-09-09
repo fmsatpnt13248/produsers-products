@@ -52,12 +52,12 @@
 
                 <div class="mb-3">
                     <label for="order_id" class="form-label">Order ID:</label>
-                    <input type="text" v-model="order_id" class="form-control" id="order_id" required>
+                    <input type="text" v-model="order_id" class="form-control" id="order_id">
                 </div>
 
                 <div class="mb-3">
                     <label for="amount" class="form-label">Amount:</label>
-                    <input type="number" v-model="amount" class="form-control" id="amount" required>
+                    <input type="number" v-model="amount" class="form-control" id="amount">
                 </div>
 
                 <button type="submit" @click.prevent="selectOrder" class="btn btn-success">Add to Order</button>
