@@ -106,7 +106,7 @@ export default {
     },
     methods: {
         fetchProducts() {
-            axios.get("http://localhost/products_api", {
+            axios.get("/products_api", {
                 params: {
                     search: this.searchQuery,
                     column: this.selectedColumn,
