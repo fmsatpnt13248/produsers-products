@@ -8,6 +8,7 @@
         </div>
         <select class="form-select" style="width: 250px; margin-top: 10px" v-model="selectedColumn">
             <option value="id">ID</option>
+            <option value="user_id">User ID</option>
             <option value="price_total">Total price</option>
             <option value="status">Status</option>
         </select>
@@ -18,6 +19,7 @@
                     <thead>
                         <tr>
                             <th style="width: 80px">ID</th>
+                            <th>User ID</th>
                             <th>Total price</th>
                             <th>Status</th>
                             <th style="width: 250px">Actions</th>
@@ -92,9 +94,9 @@ export default {
             });
         },
         orderStatus(id) {
-            if (id === 0) {
+            if (id == 0) {
                 return 'closed';
-            } else if (id === 1) {
+            } else if (id == 1) {
                 return 'pending';
             } else {
                 return 'sent';
