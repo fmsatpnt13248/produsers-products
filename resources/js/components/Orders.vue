@@ -27,7 +27,7 @@
                         <tr v-for="order in orders.data" :key="orders.id">
                             <td>{{ order.id }}</td>
                             <td>{{ order.price_total }}</td>
-                            <td>{{ order.status }}</td>
+                            <td>{{ orderStatus(order.status) }}</td>
                             <td>
                                 <div style="display: flex">
                                     <a class="btn btn-primary" :href="editRoute(order.id)">Edit</a>
@@ -79,7 +79,7 @@ export default {
         },
     },
     methods: {
-        fetchOrders(page = 1) {
+        fetchOrders() {
             axios.get("orders_api", {
                 params: {
                     search: this.searchQuery,
@@ -89,6 +89,15 @@ export default {
             }).then(response => {
                 this.orders = response.data;
             });
+        },
+        orderStatus(id) {
+            if (id === 0) {
+                return 'closed';
+            } else if (id === 1) {
+                return 'pending';
+            } else {
+                return 'sent';
+            }
         },
         nextPage() {
             if (this.orders.next_page_url) {

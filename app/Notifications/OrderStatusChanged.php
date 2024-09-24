@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class OrderStatusChanged extends Notification
+class OrderStatusChanged extends Notification implements ShouldQueue
 {
     use Queueable;
     protected $closedOrders;
@@ -27,31 +27,37 @@ class OrderStatusChanged extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['database'];
+        return ['mail'];
+    }
+
+    public function viaQueues()
+    {
+        return [
+            'mail' => 'emails',
+        ];
     }
 
     /**
      * Get the mail representation of the notification.
      */
-//    public function toMail(object $notifiable): MailMessage
-//    {
-//        return (new MailMessage)
-//                    ->line('The introduction to the notification.')
-//                    ->action('Notification Action', url('/'))
-//                    ->line('Thank you for using our application!');
-//    }
+    public function toMail(object $notifiable): MailMessage
+    {
+        return (new MailMessage)
+                    ->greeting('Hello!')
+                    ->line('Your' . count($this->closedOrders) . ' pending orders older than 30 days have been closed.');
+    }
 
     /**
      * Get the array representation of the notification.
      *
      * @return array<string, mixed>
      */
-    public function toDatabase(object $notifiable): array
-    {
-        return [
-            'message' => count($this->closedOrders) . ' pending orders older than 30 days have been closed.',
-            'closed_orders_count' => count($this->closedOrders),
-            'time' => now(),
-        ];
-    }
+//    public function toDatabase(object $notifiable): array
+//    {
+//        return [
+//            'message' => count($this->closedOrders) . ' pending orders older than 30 days have been closed.',
+//            'closed_orders_count' => count($this->closedOrders),
+//            'time' => now(),
+//        ];
+//    }
 }

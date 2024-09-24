@@ -23,7 +23,7 @@ class ClosePendingOrders extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Closing every x days old order with "pending" status';
 
     /**
      * Execute the console command.
@@ -31,20 +31,20 @@ class ClosePendingOrders extends Command
     public function handle()
     {
         $days = $this->argument('days');
-        if ($days == null) {
+        if ($days === null) {
             $this->fail('You didn\'t specify a day amount');
         } elseif ($days <= 0) {
             $this->fail('Days specified must be greater than 0');
         }
 
-        $orders = Order::where('status', 'pending')->where('created_at', '<=', Carbon::now($days)->subDays())->get();
+        $orders = Order::where('status', '1')->where('created_at', '<=', Carbon::now($days)->subDays())->get();
 
-        foreach ($orders as $order) {
-            $order->status = 'cancelled';
-            $order->save();
-        }
         if ($orders->isNotEmpty()) {
-            Notification::send(User::all(), new OrderStatusChanged($orders));
+            foreach ($orders as $order) {
+                $order->status = '0';
+                $order->save();
+                $order->user->notify(new OrderStatusChanged($orders));
+            }
         }
     }
 }
