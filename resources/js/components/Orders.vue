@@ -26,6 +26,7 @@
                     <tbody>
                         <tr v-for="order in orders.data" :key="orders.id">
                             <td>{{ order.id }}</td>
+                            <td>{{ order.user_id }}</td>
                             <td>{{ order.price_total }}</td>
                             <td>{{ orderStatus(order.status) }}</td>
                             <td>
