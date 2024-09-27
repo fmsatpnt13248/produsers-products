@@ -15,9 +15,9 @@ class OrderStatusChanged extends Notification implements ShouldQueue
     /**
      * Create a new notification instance.
      */
-    public function __construct($closedOrders)
+    public function __construct($order, $users)
     {
-        $this->closedOrders = $closedOrders;
+        $this->closedOrders = $users[$order->user_id];
     }
 
     /**
@@ -44,7 +44,7 @@ class OrderStatusChanged extends Notification implements ShouldQueue
     {
         return (new MailMessage)
                     ->greeting('Hello!')
-                    ->line('Your' . count($this->closedOrders) . ' pending orders older than 30 days have been closed.');
+                    ->line('Your' . $this->closedOrders . ' pending orders older than 30 days have been closed.');
     }
 
     /**
