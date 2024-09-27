@@ -14,7 +14,8 @@ class OrderObserver
     {
         foreach ($order->order_items as $order_item) {
             $product = Product::find($order_item->product_id);
-            $product->amount += $order_item->amount;
+            $oldAmount = $product->amount;
+            $product->amount = $oldAmount += $order_item->amount;
             $product->save();
         }
     }
